@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f6f7f8">
+<meta name="description" content="Agera Tid – intern tidrapportering för Agera Industrial Safety.">
+<title>Agera Tid | Tidrapportering</title>
+<style>
+:root{
+  --bg:#f5f7f8;--surface:#fff;--surface-2:#f0f3f5;--text:#17212b;--muted:#71808b;
+  --line:#e2e8ec;--orange:#f15a2a;--orange-hover:#d94a1f;--orange-soft:#fff0e9;
+  --green:#16794a;--green-bg:#e7f6ed;--amber:#9a5a08;--amber-bg:#fff3d9;
+  --red:#b42318;--red-bg:#ffebe9;--shadow:0 10px 30px rgba(23,33,43,.045);--radius:16px;
+}
+*{box-sizing:border-box}
+html{color-scheme:light;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid rgba(241,90,42,.28);outline-offset:2px}
+.app{min-height:100dvh}
+.topbar{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.topbar-inner{max-width:1180px;margin:auto;padding:0 24px;min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.brand-mark{width:39px;height:39px;border-radius:11px;background:var(--text);color:#fff;display:grid;place-items:center;font-weight:850;font-size:22px;position:relative;overflow:hidden;flex:none}
+.brand-mark:before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:4px;border-radius:4px;background:var(--orange)}
+.brand-mark span{margin-left:5px}
+.brand-name{font-size:17px;font-weight:800;letter-spacing:-.045em;line-height:1.1}
+.brand-sub{font-size:11px;color:var(--muted);letter-spacing:.07em;text-transform:uppercase;margin-top:4px}
+.top-actions{display:flex;align-items:center;gap:10px}
+.user-chip{display:flex;align-items:center;gap:9px;padding:6px 10px 6px 6px;border:1px solid var(--line);border-radius:999px;background:#fff}
+.avatar{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--orange-soft);color:var(--orange-hover);font-weight:800;font-size:11px}
+.user-chip strong{font-size:12px;display:block}.user-chip small{display:block;color:var(--muted);font-size:10px}
+.layout{max-width:1180px;margin:0 auto;padding:28px 24px 100px;display:grid;grid-template-columns:218px minmax(0,1fr);gap:30px}
+.sidebar{align-self:start;position:sticky;top:96px}
+.nav-label{font-size:10px;color:#97a2aa;font-weight:800;letter-spacing:.13em;text-transform:uppercase;margin:6px 0 10px 12px}
+.nav{display:grid;gap:5px}
+.nav button{display:flex;align-items:center;gap:12px;border:0;background:transparent;color:#697681;text-align:left;padding:12px 13px;border-radius:10px;font-size:13px;font-weight:650;width:100%}
+.nav button:hover{background:#edf1f3;color:var(--text)}
+.nav button.active{background:var(--orange-soft);color:var(--orange-hover)}
+.nav svg{width:18px;height:18px;flex:none}
+.side-note{margin-top:30px;padding:15px;border:1px solid var(--line);border-radius:13px;background:rgba(255,255,255,.65)}
+.side-note strong{font-size:12px}.side-note p{font-size:11px;line-height:1.55;color:var(--muted);margin:7px 0 0}
+main{min-width:0}
+.page-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin:2px 0 24px}
+.eyebrow{color:var(--orange-hover);font-size:10px;font-weight:850;letter-spacing:.13em;text-transform:uppercase}
+h1{font-size:clamp(25px,3vw,34px);line-height:1.1;letter-spacing:-.055em;margin:7px 0 8px;font-weight:800}
+.page-head p{margin:0;color:var(--muted);font-size:13px}
+.btn{border:1px solid var(--line);background:#fff;color:var(--text);padding:10px 14px;border-radius:10px;font-size:12px;font-weight:750;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;white-space:nowrap}
+.btn:hover{background:#f8fafb}.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-primary{background:var(--orange);border-color:var(--orange);color:#fff;box-shadow:0 4px 10px rgba(241,90,42,.14)}
+.btn-primary:hover{background:var(--orange-hover);border-color:var(--orange-hover)}
+.btn-small{min-height:32px;padding:6px 10px;font-size:11px}
+.btn-danger{color:var(--red);background:var(--red-bg);border-color:#f7d0cc}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:20px}
+.stat{padding:17px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow);min-width:0}
+.stat-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.stat-label{font-size:11px;color:var(--muted);font-weight:650}
+.stat-icon{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:var(--surface-2);color:#65737e}
+.stat-icon.orange{background:var(--orange-soft);color:var(--orange-hover)}
+.stat-icon svg{width:16px;height:16px}
+.stat-value{font-size:27px;font-weight:820;letter-spacing:-.06em;margin-top:14px;line-height:1}
+.stat-foot{font-size:10px;color:var(--muted);margin-top:8px}
+.panel{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow);overflow:hidden;margin-bottom:18px}
+.panel-head{padding:17px 19px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line)}
+.panel-title{font-size:14px;font-weight:800;letter-spacing:-.02em}.panel-desc{font-size:11px;color:var(--muted);margin-top:3px}
+.panel-body{padding:19px}
+.filters{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.field-control{border:1px solid var(--line);background:#fff;color:var(--text);border-radius:9px;padding:9px 11px;min-height:38px;font-size:12px;min-width:0}
+.search{position:relative;flex:1;min-width:160px}.search input{width:100%;padding-left:34px}
+.search svg{position:absolute;left:11px;top:11px;width:15px;height:15px;color:#87939c;pointer-events:none}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;white-space:nowrap}
+th{text-align:left;background:#fafbfc;color:#7b8790;font-size:10px;text-transform:uppercase;letter-spacing:.08em;font-weight:800;padding:12px 16px;border-bottom:1px solid var(--line)}
+td{padding:14px 16px;border-bottom:1px solid #edf0f2;font-size:12px;vertical-align:middle}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:#fcfdfd}
+.person{display:flex;align-items:center;gap:9px}.person-avatar{width:31px;height:31px;border-radius:9px;background:#eef2f4;display:grid;place-items:center;font-size:10px;font-weight:800;color:#65737e;flex:none}
+.person strong{display:block;font-size:12px}.person small{display:block;font-size:10px;color:var(--muted);margin-top:2px}
+.status{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:5px 8px;font-size:10px;font-weight:750}
+.status:before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor}
+.status-pending{background:var(--amber-bg);color:var(--amber)}.status-approved{background:var(--green-bg);color:var(--green)}.status-rejected{background:var(--red-bg);color:var(--red)}
+.actions{display:flex;gap:5px;align-items:center}
+.empty{text-align:center;padding:45px 20px;color:var(--muted)}.empty-icon{width:43px;height:43px;margin:0 auto 12px;border-radius:13px;background:var(--surface-2);display:grid;place-items:center;color:#7a8790}.empty-icon svg{width:20px;height:20px}.empty strong{display:block;color:var(--text);font-size:13px}.empty p{font-size:12px;margin:5px 0 0}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.form-field{display:grid;gap:6px;min-width:0}.form-field.full{grid-column:1/-1}
+.form-field label{font-size:11px;font-weight:750;color:#53616c}
+.form-field input,.form-field select,.form-field textarea{width:100%;border:1px solid #dce3e7;border-radius:9px;padding:11px 12px;background:#fff;color:var(--text);min-height:42px;font-size:13px}
+.form-field textarea{min-height:78px;resize:vertical}
+.form-help{font-size:10px;color:var(--muted)}
+.form-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.calculated{background:#f6f8f9;border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.calculated span{font-size:11px;color:var(--muted)}.calculated strong{font-size:20px;letter-spacing:-.04em}
+.two-col{display:grid;grid-template-columns:minmax(0,1fr) minmax(250px,.72fr);gap:18px}
+.project-card{padding:16px 0;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line)}.project-card:first-child{padding-top:0}.project-card:last-child{border-bottom:0;padding-bottom:0}
+.project-card strong{display:block;font-size:13px}.project-card p{font-size:11px;color:var(--muted);margin:4px 0 0}.project-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:9px}
+.pill{border:1px solid var(--line);border-radius:6px;padding:4px 7px;color:#697681;font-size:10px;font-weight:650}.pill.inactive{color:var(--red);background:var(--red-bg);border-color:#f7d0cc}
+.notice{padding:12px 14px;border:1px solid #f3d1c4;border-radius:10px;background:#fff7f2;color:#86401f;font-size:12px;line-height:1.5;margin-bottom:16px}
+.toast{position:fixed;right:22px;bottom:22px;z-index:50;padding:13px 16px;border-radius:11px;background:#17212b;color:#fff;box-shadow:0 12px 30px rgba(0,0,0,.18);font-size:12px;max-width:min(390px,calc(100vw - 32px));animation:toast-in .18s ease-out}
+.toast.error{background:#9e2f26}
+@keyframes toast-in{from{transform:translateY(8px);opacity:0}to{transform:translateY(0);opacity:1}}
+.mobile-nav{display:none}
+.modal-backdrop{position:fixed;inset:0;z-index:30;background:rgba(16,25,32,.45);backdrop-filter:blur(4px);display:grid;place-items:center;padding:18px}
+.modal{width:min(520px,100%);max-height:min(88dvh,780px);overflow:auto;border-radius:18px;background:#fff;box-shadow:0 25px 80px rgba(0,0,0,.2)}
+.modal-head{padding:20px 22px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.modal-head h2{margin:0;font-size:20px;letter-spacing:-.04em}.modal-head p{margin:5px 0 0;font-size:12px;color:var(--muted)}
+.icon-btn{width:34px;height:34px;border:1px solid var(--line);border-radius:9px;background:#fff;display:grid;place-items:center;color:#63717b;flex:none}.icon-btn svg{width:16px;height:16px}
+.modal-content{padding:20px 22px 22px}
+.page{display:none}.page.active{display:block}
+.settings-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-bottom:1px solid var(--line)}.settings-row:last-child{border-bottom:0}.settings-row strong{font-size:12px;display:block}.settings-row p{font-size:11px;color:var(--muted);margin:4px 0 0}
+.toggle{width:42px;height:24px;border-radius:999px;background:#d9e0e4;padding:3px;border:0;flex:none}.toggle span{display:block;width:18px;height:18px;background:white;border-radius:50%;box-shadow:0 1px 3px #0002;transition:transform .18s}.toggle.on{background:var(--orange)}.toggle.on span{transform:translateX(18px)}
+.footer-note{text-align:center;color:#9aa4ab;font-size:10px;padding:14px 0 0}
+.hidden{display:none!important}
+@media(max-width:900px){.layout{grid-template-columns:185px minmax(0,1fr);gap:20px;padding:23px 18px 90px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.two-col{grid-template-columns:1fr}.side-note{padding:12px}.stat-value{font-size:25px}}
+@media(max-width:640px){
+ body{font-size:14px}.topbar-inner{min-height:62px;padding:0 16px}.brand-mark{width:35px;height:35px}.brand-name{font-size:15px}.brand-sub{font-size:9px}.user-chip{padding:4px}.user-chip>div:last-child{display:none}.top-actions{gap:6px}.top-actions .btn{padding:8px 10px;min-height:35px;font-size:11px}
+ .layout{display:block;padding:22px 14px calc(95px + env(safe-area-inset-bottom));}.sidebar{display:none}.page-head{margin-bottom:18px;align-items:center}.page-head h1{font-size:28px}.page-head p{font-size:12px;max-width:280px}.page-head>.btn{font-size:0;width:42px;height:42px;padding:0;flex:none}.page-head>.btn svg{width:19px;height:19px}
+ .stats{gap:9px;margin-bottom:15px}.stat{padding:13px;border-radius:13px}.stat-label{font-size:10px}.stat-icon{width:27px;height:27px}.stat-value{font-size:25px;margin-top:12px}.stat-foot{font-size:9px}
+ .panel{border-radius:14px;margin-bottom:14px}.panel-head{padding:14px}.panel-body{padding:14px}.panel-title{font-size:13px}.filters{width:100%}.filters .field-control{flex:1;min-width:calc(50% - 5px)}.filters .search{flex-basis:100%}
+ .table-wrap{overflow:visible}table,thead,tbody,tr,th,td{display:block}thead{display:none}tbody{display:grid;gap:10px;padding:10px}tbody tr{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff;display:grid;grid-template-columns:1fr auto;gap:9px 12px}tbody tr:hover{background:#fff}tbody td{padding:0;border:0;white-space:normal;font-size:11px;min-width:0}tbody td[data-label="Medarbetare"],tbody td[data-label="Projekt"]{grid-column:1/-1}tbody td[data-label="Medarbetare"]{order:0}tbody td[data-label="Datum"]{order:1;align-self:center;color:var(--muted)}tbody td[data-label="Tid"]{order:2;grid-column:1;grid-row:3;color:#3e4a53;font-weight:700}tbody td[data-label="Timmar"]{order:3;grid-column:2;grid-row:3;text-align:right;font-size:14px;font-weight:850}tbody td[data-label="Status"]{order:4;grid-column:1;grid-row:4;align-self:center}tbody td[data-label="Åtgärder"]{order:5;grid-column:2;grid-row:4;justify-self:end}.person-avatar{width:34px;height:34px}.person strong{font-size:12px}
+ .form-grid{grid-template-columns:1fr;gap:12px}.form-field.full{grid-column:auto}.form-field input,.form-field select,.form-field textarea{font-size:16px;min-height:46px}.form-footer{align-items:stretch}.form-footer .btn{flex:1}
+ .modal-backdrop{padding:0;align-items:end}.modal{border-radius:20px 20px 0 0;width:100%;max-height:92dvh;padding-bottom:env(safe-area-inset-bottom)}.modal-head{padding:18px 18px 14px}.modal-content{padding:17px 18px 20px}
+ .mobile-nav{display:grid;grid-template-columns:repeat(4,1fr);position:fixed;z-index:20;bottom:0;left:0;right:0;padding:7px 8px calc(7px + env(safe-area-inset-bottom));background:rgba(255,255,255,.96);backdrop-filter:blur(18px);border-top:1px solid var(--line)}
+ .mobile-nav button{border:0;background:transparent;color:#89949c;display:grid;justify-items:center;gap:4px;padding:6px 2px;font-size:9px;font-weight:750}.mobile-nav button svg{width:19px;height:19px}.mobile-nav button.active{color:var(--orange-hover)}
+ .toast{bottom:calc(78px + env(safe-area-inset-bottom));right:12px}.footer-note{font-size:9px}
+}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand" aria-label="Agera Tid">
+        <div class="brand-mark" aria-hidden="true"><span>A</span></div>
+        <div><div class="brand-name">agera<span style="color:var(--orange)">.</span>tid</div><div class="brand-sub">Industrial Safety</div></div>
+      </div>
+      <div class="top-actions">
+        <button class="btn" id="roleButton" type="button" title="Byt demo-roll">Byt vy</button>
+        <div class="user-chip"><div class="avatar" id="userAvatar">AG</div><div><strong id="userName">Agera admin</strong><small id="userRole">Administratör</small></div></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="nav-label">Arbetsyta</div>
+      <nav class="nav" aria-label="Huvudmeny">
+        <button class="active" data-page="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Översikt</button>
+        <button data-page="entries"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>Tidrapporter</button>
+        <button data-page="projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V4h8v3M3 12h18M10 12v2h4v-2"/></svg>Projekt</button>
+        <button data-page="staff"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20v-2a6.5 6.5 0 0 1 13 0v2M16 5a3.5 3.5 0 0 1 0 6.8M18 14a5 5 0 0 1 3.5 4.8V20"/></svg>Personal</button>
+      </nav>
+      <div class="side-note"><strong>Ordning och reda.</strong><p>Samla arbetstid, projekt och attestering på ett ställe.</p></div>
+    </aside>
+
+    <main>
+      <section class="page active" id="page-overview">
+        <div class="page-head"><div><div class="eyebrow">Arbetsyta / Översikt</div><h1>God morgon.</h1><p>Här är läget för Ageras tidrapportering.</p></div><button class="btn btn-primary" data-action="new-entry"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Ny tidrapport</button></div>
+        <div class="stats">
+          <article class="stat"><div class="stat-top"><span class="stat-label">Rapporterade timmar</span><span class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span></div><div class="stat-value" id="statHours">0 h</div><div class="stat-foot" id="statHoursFoot">Totalt denna månad</div></article>
+          <article class="stat"><div class="stat-top"><span class="stat-label">Väntar attest</span><span class="stat-icon orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg></span></div><div class="stat-value" id="statPending">0</div><div class="stat-foot">Behöver hanteras</div></article>
+          <article class="stat"><div class="stat-top"><span class="stat-label">Godkända rapporter</span><span class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m5 12 4 4L19 6"/></svg></span></div><div class="stat-value" id="statApproved">0</div><div class="stat-foot">Under denna månad</div></article>
+          <article class="stat"><div class="stat-top"><span class="stat-label">Aktiva projekt</span><span class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V4h8v3"/></svg></span></div><div class="stat-value" id="statProjects">0</div><div class="stat-foot">Tillgängliga för rapportering</div></article>
+        </div>
+        <section class="panel">
+          <div class="panel-head"><div><div class="panel-title">Senaste tidrapporter</div><div class="panel-desc">Följ arbetstid och status i realtid i den här webbläsaren.</div></div><button class="btn btn-small" data-go="entries">Visa alla <span aria-hidden="true">→</span></button></div>
+          <div id="recentTable"></div>
+        </section>
+        <section class="panel">
+          <div class="panel-head"><div><div class="panel-title">Att göra</div><div class="panel-desc">Rapporter som väntar på hantering.</div></div><span class="status status-pending" id="todoBadge">0 väntande</span></div>
+          <div id="todoList" class="panel-body"></div>
+        </section>
+      </section>
+
+      <section class="page" id="page-entries">
+        <div class="page-head"><div><div class="eyebrow">Arbetsyta / Tidrapporter</div><h1>Tidrapporter</h1><p>Registrera arbetstid och följ rapporternas status.</p></div><button class="btn btn-primary" data-action="new-entry"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Ny rapport</button></div>
+        <section class="panel">
+          <div class="panel-head"><div><div class="panel-title">Alla rapporter</div><div class="panel-desc" id="entryCount">0 rapporter</div></div><button class="btn btn-small" id="exportBtn"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12m-5-5 5 5 5-5M4 17v3h16v-3"/></svg>Exportera CSV</button></div>
+          <div class="panel-body" style="padding-bottom:12px"><div class="filters">
+            <div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><input class="field-control" id="entrySearch" placeholder="Sök projekt eller personal..." aria-label="Sök rapporter"></div>
+            <select class="field-control" id="monthFilter" aria-label="Filtrera månad"></select>
+            <select class="field-control" id="statusFilter" aria-label="Filtrera status"><option value="all">Alla statusar</option><option value="pending">Väntar attest</option><option value="approved">Godkända</option><option value="rejected">Avvisade</option></select>
+          </div></div>
+          <div id="entriesTable"></div>
+        </section>
+        <div class="footer-note">CSV-exporten innehåller de rapporter som matchar valt filter.</div>
+      </section>
+
+      <section class="page" id="page-projects">
+        <div class="page-head"><div><div class="eyebrow">Arbetsyta / Projekt</div><h1>Projekt</h1><p>Håll ordning på arbetsplatser och kunder.</p></div><button class="btn btn-primary" data-action="new-project"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Nytt projekt</button></div>
+        <div class="two-col"><section class="panel"><div class="panel-head"><div><div class="panel-title">Projektlista</div><div class="panel-desc">Aktiva och arkiverade projekt</div></div></div><div class="panel-body" id="projectList"></div></section>
+        <section class="panel"><div class="panel-head"><div><div class="panel-title">Projektöversikt</div><div class="panel-desc">Summering av registrerad tid</div></div></div><div class="panel-body" id="projectSummary"></div></section></div>
+      </section>
+
+      <section class="page" id="page-staff">
+        <div class="page-head"><div><div class="eyebrow">Arbetsyta / Personal</div><h1>Personal</h1><p>Översikt över medarbetare och registrerade timmar.</p></div><button class="btn btn-primary" data-action="new-staff"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Lägg till</button></div>
+        <section class="panel"><div class="panel-head"><div><div class="panel-title">Medarbetare</div><div class="panel-desc">Demo-personal som kan kopplas till tidrapporter</div></div></div><div id="staffTable"></div></section>
+      </section>
+    </main>
+  </div>
+
+  <nav class="mobile-nav" aria-label="Mobilmeny">
+    <button class="active" data-page="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Översikt</button>
+    <button data-page="entries"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>Tidrapporter</button>
+    <button data-page="projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V4h8v3"/></svg>Projekt</button>
+    <button data-page="staff"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20v-2a6.5 6.5 0 0 1 13 0v2M16 5a3.5 3.5 0 0 1 0 6.8M18 14a5 5 0 0 1 3.5 4.8V20"/></svg>Personal</button>
+  </nav>
+</div>
+
+<div id="modalRoot"></div><div id="toastRoot" aria-live="polite"></div>
+
+<script>
+(() => {
+  "use strict";
+  const STORAGE_KEY = "agera-tid-v1";
+  const $ = (s, root=document) => root.querySelector(s);
+  const $$ = (s, root=document) => [...root.querySelectorAll(s)];
+  const today = () => {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+  };
+  const currentMonth = () => today().slice(0,7);
+  const uid = () => (crypto.randomUUID ? crypto.randomUUID() : `id-${Date.now()}-${Math.random().toString(36).slice(2)}`);
+  const initials = (name="") => name.trim().split(/\s+/).slice(0,2).map(p=>p[0]||"").join("").toUpperCase();
+  const escapeHTML = (value="") => String(value).replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+  const fmtDate = (value) => {
+    if(!value) return "–";
+    const [y,m,d]=value.split("-").map(Number);
+    return new Intl.DateTimeFormat("sv-SE",{day:"numeric",month:"short"}).format(new Date(y,m-1,d));
+  };
+  const fmtMonth = (value) => {
+    const [y,m]=value.split("-").map(Number);
+    return new Intl.DateTimeFormat("sv-SE",{month:"long",year:"numeric"}).format(new Date(y,m-1,1));
+  };
+  const fmtHours = n => `${Number(n||0).toLocaleString("sv-SE",{maximumFractionDigits:2,minimumFractionDigits:0})} h`;
+  const fmtTime = t => t || "–";
+  const statusName = s => ({pending:"Väntar attest",approved:"Godkänd",rejected:"Avvisad"}[s]||s);
+  const statusHTML = s => `<span class="status status-${escapeHTML(s)}">${escapeHTML(statusName(s))}</span>`;
+  const iconEmpty = `<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5"/></svg></div><strong>Inget att visa ännu</strong><p>När du registrerar tid dyker den upp här.</p></div>`;
+  const seed = () => {
+    const p1=uid(),p2=uid(),p3=uid(),u1=uid(),u2=uid(),u3=uid();
+    const d = new Date(); const dayAgo = n => {const x=new Date(d);x.setDate(x.getDate()-n);return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,"0")}-${String(x.getDate()).padStart(2,"0")}`};
+    return {
+      projects:[
+        {id:p1,name:"Raffinaderi väst",customer:"Demo kund",location:"Lysekil",active:true},
+        {id:p2,name:"Industriområde nord",customer:"Demo kund",location:"Göteborg",active:true},
+        {id:p3,name:"Energi och underhåll",customer:"Demo kund",location:"Mölndal",active:false}
+      ],
+      staff:[
+        {id:u1,name:"Alex Andersson",role:"Brandvakt",active:true},
+        {id:u2,name:"Robin Karlsson",role:"Brandvakt",active:true},
+        {id:u3,name:"Sam Nilsson",role:"Administratör",active:true}
+      ],
+      entries:[
+        {id:uid(),userId:u1,projectId:p1,date:dayAgo(0),start:"07:00",end:"16:00",breakMinutes:30,hours:8.5,note:"Dagskift",status:"pending",createdAt:new Date().toISOString()},
+        {id:uid(),userId:u2,projectId:p2,date:dayAgo(1),start:"16:00",end:"22:00",breakMinutes:30,hours:5.5,note:"Kvällspass",status:"approved",createdAt:new Date().toISOString()},
+        {id:uid(),userId:u1,projectId:p1,date:dayAgo(2),start:"07:00",end:"15:30",breakMinutes:30,hours:8,note:"",status:"approved",createdAt:new Date().toISOString()},
+        {id:uid(),userId:u3,projectId:p2,date:dayAgo(3),start:"08:00",end:"12:00",breakMinutes:0,hours:4,note:"Introduktion",status:"pending",createdAt:new Date().toISOString()}
+      ],
+      role:"admin", currentUserId:u3, settings:{seeded:true}
+    };
+  };
+  let state;
+  let toastTimer;
+  try {
+    const raw=localStorage.getItem(STORAGE_KEY);
+    state=raw?JSON.parse(raw):seed();
+    if(!state || !Array.isArray(state.entries)||!Array.isArray(state.projects)||!Array.isArray(state.staff)) state=seed();
+  } catch { state=seed(); }
+  function save(){ try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch{notify("Kunde inte spara lokalt. Kontrollera webbläsarens lagringsutrymme.",true);} }
+  function currentUser(){ return state.staff.find(p=>p.id===state.currentUserId)||state.staff[0]||{name:"Demo användare",role:"Brandvakt",id:"demo"}; }
+  function isAdmin(){return state.role==="admin";}
+  function project(id){return state.projects.find(p=>p.id===id);}
+  function person(id){return state.staff.find(p=>p.id===id);}
+  function hoursBetween(start,end,breakMinutes){
+    if(!/^\d{2}:\d{2}$/.test(start)||!/^\d{2}:\d{2}$/.test(end))return null;
+    const [sh,sm]=start.split(":").map(Number),[eh,em]=end.split(":").map(Number);
+    if(sh>23||eh>23||sm>59||em>59)return null;
+    let minutes=eh*60+em-(sh*60+sm); if(minutes<=0)minutes+=1440;
+    const rest=Number(breakMinutes); if(!Number.isFinite(rest)||rest<0||rest>=minutes)return null;
+    const hours=(minutes-rest)/60;
+    return hours>0&&hours<=24?Math.round(hours*100)/100:null;
+  }
+  function notify(message,error=false){
+    clearTimeout(toastTimer);
+    $("#toastRoot").innerHTML=`<div class="toast ${error?"error":""}" role="status">${escapeHTML(message)}</div>`;
+    toastTimer=setTimeout(()=>$("#toastRoot").innerHTML="",3200);
+  }
+  function go(page){
+    if(!["overview","entries","projects","staff"].includes(page))return;
+    $$(".page").forEach(el=>el.classList.toggle("active",el.id===`page-${page}`));
+    $$("[data-page]").forEach(el=>el.classList.toggle("active",el.dataset.page===page));
+    window.scrollTo({top:0,behavior:"smooth"});
+    if(page==="entries") renderEntries();
+    if(page==="projects") renderProjects();
+    if(page==="staff") renderStaff();
+  }
+  function tableHTML(entries,{compact=false}={}){
+    if(!entries.length)return iconEmpty;
+    return `<div class="table-wrap"><table><thead><tr><th>Medarbetare</th><th>Projekt</th><th>Datum</th><th>Tid</th><th>Timmar</th><th>Status</th><th>Åtgärder</th></tr></thead><tbody>${entries.map(e=>{
+      const u=person(e.userId),p=project(e.projectId);
+      const owner=u?.name||"Okänd medarbetare";
+      const proj=p?.name||"Arkiverat projekt";
+      const actions=isAdmin()&&e.status==="pending"?`<div class="actions"><button class="btn btn-small" data-entry-action="approve" data-id="${escapeHTML(e.id)}" aria-label="Godkänn rapport">Godkänn</button><button class="btn btn-small btn-danger" data-entry-action="reject" data-id="${escapeHTML(e.id)}" aria-label="Avvisa rapport">Avvisa</button></div>`:`<div class="actions">${e.status==="pending"&&e.userId===currentUser().id?`<button class="btn btn-small" data-entry-action="delete" data-id="${escapeHTML(e.id)}">Ta bort</button>`:"<span style='color:#9aa4ab'>—</span>"}</div>`;
+      return `<tr>
+        <td data-label="Medarbetare"><div class="person"><div class="person-avatar">${escapeHTML(initials(owner))}</div><div><strong>${escapeHTML(owner)}</strong><small>${escapeHTML(u?.role||"Medarbetare")}</small></div></div></td>
+        <td data-label="Projekt"><strong style="font-size:12px">${escapeHTML(proj)}</strong>${p?.customer?`<div style="font-size:10px;color:var(--muted);margin-top:3px">${escapeHTML(p.customer)}</div>`:""}</td>
+        <td data-label="Datum">${escapeHTML(fmtDate(e.date))}</td>
+        <td data-label="Tid">${escapeHTML(fmtTime(e.start))}–${escapeHTML(fmtTime(e.end))}${e.breakMinutes?`<div style="font-size:10px;color:var(--muted);margin-top:3px">Rast ${e.breakMinutes} min</div>`:""}</td>
+        <td data-label="Timmar"><strong>${escapeHTML(fmtHours(e.hours))}</strong></td>
+        <td data-label="Status">${statusHTML(e.status)}</td>
+        <td data-label="Åtgärder">${actions}</td>
+      </tr>`;
+    }).join("")}</tbody></table></div>`;
+  }
+  function monthEntries(){return state.entries.filter(e=>e.date.slice(0,7)===currentMonth());}
+  function renderHeader(){
+    const u=currentUser();
+    $("#userAvatar").textContent=initials(u.name)||"AG";
+    $("#userName").textContent=u.name;
+    $("#userRole").textContent=state.role==="admin"?"Administratör":"Brandvakt";
+    $("#roleButton").textContent=state.role==="admin"?"Visa brandvakt":"Visa admin";
+  }
+  function renderOverview(){
+    const es=monthEntries(),visible=isAdmin()?es:es.filter(e=>e.userId===currentUser().id);
+    const total=visible.reduce((sum,e)=>sum+Number(e.hours||0),0);
+    const pending=isAdmin()?visible.filter(e=>e.status==="pending").length:visible.filter(e=>e.status==="pending").length;
+    $("#statHours").textContent=fmtHours(total);
+    $("#statHoursFoot").textContent=state.role==="admin"?"Totalt denna månad":"Dina timmar denna månad";
+    $("#statPending").textContent=String(pending);
+    $("#statApproved").textContent=String(visible.filter(e=>e.status==="approved").length);
+    $("#statProjects").textContent=String(state.projects.filter(p=>p.active).length);
+    const recent=[...visible].sort((a,b)=>b.date.localeCompare(a.date)||String(b.createdAt).localeCompare(String(a.createdAt))).slice(0,5);
+    $("#recentTable").innerHTML=tableHTML(recent,{compact:true});
+    const todo=isAdmin()?visible.filter(e=>e.status==="pending"):visible.filter(e=>e.status==="pending");
+    $("#todoBadge").textContent=`${todo.length} väntande`;
+    $("#todoList").innerHTML=todo.length?todo.slice(0,4).map(e=>{
+      const u=person(e.userId),p=project(e.projectId);
+      return `<div class="project-card"><div><strong>${escapeHTML(u?.name||"Medarbetare")} · ${escapeHTML(p?.name||"Projekt")}</strong><p>${escapeHTML(fmtDate(e.date))} · ${escapeHTML(e.start)}–${escapeHTML(e.end)} · ${escapeHTML(fmtHours(e.hours))}</p></div><button class="btn btn-small" data-entry-action="${isAdmin()?"approve":"view"}" data-id="${escapeHTML(e.id)}">${isAdmin()?"Godkänn":"Visa"}</button></div>`;
+    }).join(""):iconEmpty;
+  }
+  function renderMonthFilter(){
+    const select=$("#monthFilter"),old=select.value||"all";
+    const months=[...new Set(state.entries.map(e=>e.date.slice(0,7)))].sort().reverse();
+    select.innerHTML=`<option value="all">Alla månader</option>${months.map(m=>`<option value="${escapeHTML(m)}">${escapeHTML(fmtMonth(m))}</option>`).join("")}`;
+    select.value=months.includes(old)?old:"all";
+  }
+  function filteredEntries(){
+    const search=$("#entrySearch").value.trim().toLocaleLowerCase("sv-SE");
+    const month=$("#monthFilter").value,status=$("#statusFilter").value;
+    return [...state.entries].filter(e=>{
+      if(!isAdmin()&&e.userId!==currentUser().id)return false;
+      if(month!=="all"&&!e.date.startsWith(month))return false;
+      if(status!=="all"&&e.status!==status)return false;
+      const text=`${person(e.userId)?.name||""} ${project(e.projectId)?.name||""} ${project(e.projectId)?.customer||""} ${e.note||""}`.toLocaleLowerCase("sv-SE");
+      return !search||text.includes(search);
+    }).sort((a,b)=>b.date.localeCompare(a.date)||String(b.createdAt).localeCompare(String(a.createdAt)));
+  }
+  function renderEntries(){
+    renderMonthFilter();
+    const es=filteredEntries();
+    $("#entryCount").textContent=`${es.length} ${es.length===1?"rapport":"rapporter"}`;
+    $("#entriesTable").innerHTML=tableHTML(es);
+  }
+  function renderProjects(){
+    const projects=[...state.projects].sort((a,b)=>Number(b.active)-Number(a.active)||a.name.localeCompare(b.name,"sv"));
+    $("#projectList").innerHTML=projects.length?projects.map(p=>{
+      const es=state.entries.filter(e=>e.projectId===p.id);
+      const hours=es.reduce((n,e)=>n+Number(e.hours||0),0);
+      return `<div class="project-card"><div><strong>${escapeHTML(p.name)}</strong><p>${escapeHTML(p.customer||"Ingen kund angiven")}${p.location?` · ${escapeHTML(p.location)}`:""}</p><div class="project-meta"><span class="pill">${es.length} rapporter</span><span class="pill">${escapeHTML(fmtHours(hours))}</span>${p.active?"<span class='status status-approved'>Aktivt</span>":"<span class='pill inactive'>Arkiverat</span>"}</div></div>${isAdmin()?`<button class="btn btn-small" data-project-toggle="${escapeHTML(p.id)}" data-active="${p.active?"false":"true"}">${p.active?"Arkivera":"Aktivera"}</button>`:""}</div>`;
+    }).join(""):iconEmpty;
+    const active=projects.filter(p=>p.active).length,totalHours=state.entries.reduce((n,e)=>n+Number(e.hours||0),0);
+    $("#projectSummary").innerHTML=`<div class="stat" style="box-shadow:none;margin-bottom:10px"><div class="stat-label">Aktiva projekt</div><div class="stat-value">${active}</div></div><div class="stat" style="box-shadow:none"><div class="stat-label">Totalt registrerade timmar</div><div class="stat-value">${fmtHours(totalHours)}</div></div><p style="font-size:11px;color:var(--muted);line-height:1.6;margin:15px 0 0">Arkiverade projekt finns kvar i historiska rapporter men kan inte väljas för nya rapporter.</p>`;
+  }
+  function renderStaff(){
+    const list=[...state.staff].sort((a,b)=>Number(b.active)-Number(a.active)||a.name.localeCompare(b.name,"sv"));
+    $("#staffTable").innerHTML=list.length?`<div class="table-wrap"><table><thead><tr><th>Medarbetare</th><th>Roll</th><th>Registrerade timmar</th><th>Status</th><th>Åtgärd</th></tr></thead><tbody>${list.map(u=>{
+      const es=state.entries.filter(e=>e.userId===u.id),hours=es.reduce((n,e)=>n+Number(e.hours||0),0);
+      return `<tr><td data-label="Medarbetare"><div class="person"><div class="person-avatar">${escapeHTML(initials(u.name))}</div><div><strong>${escapeHTML(u.name)}</strong><small>${escapeHTML(u.email||"Demo-profil")}</small></div></div></td><td data-label="Roll">${escapeHTML(u.role)}</td><td data-label="Registrerade timmar"><strong>${escapeHTML(fmtHours(hours))}</strong><div style="font-size:10px;color:var(--muted)">${es.length} rapporter</div></td><td data-label="Status">${u.active?'<span class="status status-approved">Aktiv</span>':'<span class="pill inactive">Inaktiv</span>'}</td><td data-label="Åtgärd">${isAdmin()&&u.id!==currentUser().id?`<button class="btn btn-small" data-staff-toggle="${escapeHTML(u.id)}" data-active="${u.active?"false":"true"}">${u.active?"Inaktivera":"Aktivera"}</button>`:"—"}</td></tr>`;
+    }).join("")}</tbody></table></div>`:iconEmpty;
+  }
+  function renderAll(){
+    renderHeader();renderOverview();renderMonthFilter();renderEntries();renderProjects();renderStaff();
+  }
+  function showModal(title,description,content){
+    $("#modalRoot").innerHTML=`<div class="modal-backdrop" data-close-backdrop><section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-head"><div><h2 id="modalTitle">${escapeHTML(title)}</h2><p>${escapeHTML(description)}</p></div><button class="icon-btn" type="button" data-close-modal aria-label="Stäng"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div><div class="modal-content">${content}</div></section></div>`;
+    document.body.style.overflow="hidden";
+    const first=$("input,select,textarea,button",$("#modalRoot"));if(first)setTimeout(()=>first.focus(),30);
+  }
+  function closeModal(){ $("#modalRoot").innerHTML="";document.body.style.overflow=""; }
+  function entryModal(){
+    const activeProjects=state.projects.filter(p=>p.active);
+    const activeStaff=state.staff.filter(u=>u.active);
+    if(!activeProjects.length){notify("Skapa ett aktivt projekt innan du registrerar tid.",true);go("projects");return;}
+    if(!activeStaff.length){notify("Lägg till en aktiv medarbetare först.",true);go("staff");return;}
+    const current=currentUser();
+    showModal("Ny tidrapport","Registrera arbetstid för ett projekt.",`
+      <form id="entryForm">
+        <div class="form-grid">
+          ${isAdmin()?`<div class="form-field full"><label for="entryUser">Medarbetare *</label><select id="entryUser" required>${activeStaff.map(u=>`<option value="${escapeHTML(u.id)}" ${u.id===current.id?"selected":""}>${escapeHTML(u.name)}</option>`).join("")}</select></div>`:""}
+          <div class="form-field full"><label for="entryProject">Projekt / arbetsplats *</label><select id="entryProject" required>${activeProjects.map(p=>`<option value="${escapeHTML(p.id)}">${escapeHTML(p.name)}${p.location?` · ${escapeHTML(p.location)}`:""}</option>`).join("")}</select></div>
+          <div class="form-field"><label for="entryDate">Datum *</label><input id="entryDate" type="date" value="${today()}" required max="2099-12-31"></div>
+          <div class="form-field"><label for="entryBreak">Rast (minuter)</label><select id="entryBreak"><option value="0">Ingen rast</option><option value="15">15 minuter</option><option value="30" selected>30 minuter</option><option value="45">45 minuter</option><option value="60">60 minuter</option><option value="90">90 minuter</option><option value="120">120 minuter</option></select></div>
+          <div class="form-field"><label for="entryStart">Starttid *</label><input id="entryStart" type="time" value="07:00" required></div>
+          <div class="form-field"><label for="entryEnd">Sluttid *</label><input id="entryEnd" type="time" value="16:00" required><span class="form-help">Nattpass över midnatt stöds.</span></div>
+          <div class="form-field full"><label for="entryNote">Anteckning</label><textarea id="entryNote" maxlength="500" placeholder="Exempelvis arbetsmoment eller avvikelse..."></textarea></div>
+          <div class="form-field full"><div class="calculated"><span>Beräknad arbetstid efter rast</span><strong id="calculatedHours">8,5 h</strong></div></div>
+        </div>
+        <div class="form-footer"><span class="form-help">Rapporten sparas som väntande attest.</span><button class="btn btn-primary" type="submit">Spara rapport</button></div>
+      </form>`);
+    const update=()=>{const h=hoursBetween($("#entryStart").value,$("#entryEnd").value,$("#entryBreak").value);$("#calculatedHours").textContent=h===null?"Kontrollera tider":fmtHours(h);$("#calculatedHours").style.color=h===null?"var(--red)":"var(--text)";};
+    ["#entryStart","#entryEnd","#entryBreak"].forEach(sel=>$(sel).addEventListener("input",update));
+    $("#entryForm").addEventListener("submit",e=>{
+      e.preventDefault();
+      const date=$("#entryDate").value,start=$("#entryStart").value,end=$("#entryEnd").value,breakMinutes=Number($("#entryBreak").value),hours=hoursBetween(start,end,breakMinutes);
+      if(!date||!start||!end||hours===null){notify("Kontrollera datum, start, sluttid och rast.",true);return;}
+      const userId=isAdmin()?$("#entryUser").value:currentUser().id,projectId=$("#entryProject").value;
+      if(!person(userId)||!project(projectId)?.active){notify("Välj en aktiv medarbetare och ett aktivt projekt.",true);return;}
+      state.entries.push({id:uid(),userId,projectId,date,start,end,breakMinutes,hours,note:$("#entryNote").value.trim(),status:"pending",createdAt:new Date().toISOString()});
+      save();closeModal();renderAll();go("entries");notify("Tidrapporten har sparats.");
+    });
+  }
+  function projectModal(){
+    showModal("Nytt projekt","Lägg till en arbetsplats som kan väljas i tidrapporteringen.",`
+      <form id="projectForm"><div class="form-grid">
+        <div class="form-field full"><label for="projectName">Projektnamn *</label><input id="projectName" maxlength="120" placeholder="Ex. Underhåll raffinaderi" required></div>
+        <div class="form-field"><label for="projectCustomer">Kund</label><input id="projectCustomer" maxlength="120" placeholder="Kundnamn"></div>
+        <div class="form-field"><label for="projectLocation">Ort / arbetsplats</label><input id="projectLocation" maxlength="160" placeholder="Ex. Lysekil"></div>
+      </div><div class="form-footer"><span class="form-help">Projektet aktiveras direkt.</span><button class="btn btn-primary" type="submit">Skapa projekt</button></div></form>`);
+    $("#projectForm").addEventListener("submit",e=>{e.preventDefault();const name=$("#projectName").value.trim();if(name.length<2){notify("Ange ett projektnamn.",true);return;}state.projects.push({id:uid(),name,customer:$("#projectCustomer").value.trim(),location:$("#projectLocation").value.trim(),active:true});save();closeModal();renderAll();notify("Projektet har skapats.");});
+  }
+  function staffModal(){
+    showModal("Lägg till personal","Skapa en lokal medarbetarprofil i prototypen.",`
+      <form id="staffForm"><div class="form-grid">
+        <div class="form-field full"><label for="staffName">Namn *</label><input id="staffName" maxlength="100" placeholder="För- och efternamn" required></div>
+        <div class="form-field full"><label for="staffEmail">E-post (valfritt)</label><input id="staffEmail" type="email" maxlength="254" placeholder="namn@exempel.se"></div>
+        <div class="form-field full"><label for="staffRole">Roll</label><select id="staffRole"><option>Brandvakt</option><option>Administratör</option></select></div>
+      </div><div class="notice" style="margin-top:16px;margin-bottom:0">Detta skapar inte ett inloggningskonto. Användarhantering kräver en backend.</div><div class="form-footer"><span class="form-help">Profilen sparas i denna webbläsare.</span><button class="btn btn-primary" type="submit">Lägg till</button></div></form>`);
+    $("#staffForm").addEventListener("submit",e=>{e.preventDefault();const name=$("#staffName").value.trim(),email=$("#staffEmail").value.trim();if(name.length<2){notify("Ange medarbetarens namn.",true);return;}state.staff.push({id:uid(),name,email,role:$("#staffRole").value,active:true});save();closeModal();renderAll();notify("Medarbetarprofilen har lagts till.");});
+  }
+  function roleModal(){
+    showModal("Byt demo-vy","Välj vilken roll du vill förhandsgranska. Detta är inte riktig inloggning.",`
+      <div class="notice">Rollbytet är endast för att testa gränssnittet. Det skyddar inte data och ska inte användas som behörighetskontroll.</div>
+      <div class="form-field"><label for="demoRole">Visa appen som</label><select id="demoRole"><option value="admin" ${isAdmin()?"selected":""}>Administratör</option><option value="staff" ${!isAdmin()?"selected":""}>Brandvakt</option></select></div>
+      <div class="form-field" style="margin-top:13px"><label for="demoPerson">Demo-profil</label><select id="demoPerson">${state.staff.filter(u=>u.active).map(u=>`<option value="${escapeHTML(u.id)}" ${u.id===currentUser().id?"selected":""}>${escapeHTML(u.name)} · ${escapeHTML(u.role)}</option>`).join("")}</select></div>
+      <div class="form-footer"><span class="form-help">Data ligger kvar i webbläsaren.</span><button class="btn btn-primary" id="applyRole">Byt vy</button></div>`);
+    $("#applyRole").addEventListener("click",()=>{state.role=$("#demoRole").value;const u=person($("#demoPerson").value);if(u)state.currentUserId=u.id;save();closeModal();renderAll();go("overview");notify("Demo-vyn har ändrats.");});
+  }
+  function handleEntryAction(action,id){
+    const entry=state.entries.find(e=>e.id===id);if(!entry)return;
+    if(action==="approve"||action==="reject"){
+      if(!isAdmin()){notify("Endast administratörsvyn kan attestera i prototypen.",true);return;}
+      if(entry.status!=="pending"){notify("Rapporten är redan hanterad.",true);return;}
+      entry.status=action==="approve"?"approved":"rejected";entry.approvedAt=new Date().toISOString();entry.approvedBy=currentUser().id;save();renderAll();notify(action==="approve"?"Rapporten har godkänts.":"Rapporten har avvisats.");return;
+    }
+    if(action==="delete"){
+      if(entry.userId!==currentUser().id||entry.status!=="pending"){notify("Bara dina egna väntande rapporter kan tas bort.",true);return;}
+      if(!confirm("Vill du ta bort den här tidrapporten?"))return;
+      state.entries=state.entries.filter(e=>e.id!==id);save();renderAll();notify("Rapporten har tagits bort.");return;
+    }
+    if(action==="view"){go("entries");}
+  }
+  function exportCSV(){
+    const es=filteredEntries();
+    if(!es.length){notify("Det finns inga rapporter att exportera.",true);return;}
+    const rows=[["Datum","Medarbetare","Roll","Projekt","Kund","Ort","Start","Slut","Rast minuter","Arbetstimmar","Status","Anteckning"]];
+    es.forEach(e=>{const u=person(e.userId),p=project(e.projectId);rows.push([e.date,u?.name||"",u?.role||"",p?.name||"",p?.customer||"",p?.location||"",e.start,e.end,e.breakMinutes,e.hours,statusName(e.status),e.note||""]);});
+    const csv="\uFEFF"+rows.map(row=>row.map(v=>{const s=String(v??"");return `"${s.replace(/"/g,'""')}"`;}).join(";")).join("\r\n");
+    const blob=new Blob([csv],{type:"text/csv;charset=utf-8;"}),url=URL.createObjectURL(blob),a=document.createElement("a");
+    a.href=url;a.download=`agera-tid-${$("#monthFilter").value==="all"?"alla-manader":$("#monthFilter").value}.csv`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+    notify(`${es.length} rapporter exporterades till CSV.`);
+  }
+  document.addEventListener("click",e=>{
+    const target=e.target.closest("button");if(!target)return;
+    if(target.dataset.page){go(target.dataset.page);return;}
+    if(target.dataset.go){go(target.dataset.go);return;}
+    if(target.dataset.action==="new-entry"){entryModal();return;}
+    if(target.dataset.action==="new-project"){if(!isAdmin()){notify("Byt till administratörsvyn för att hantera projekt.",true);return;}projectModal();return;}
+    if(target.dataset.action==="new-staff"){if(!isAdmin()){notify("Byt till administratörsvyn för att hantera personal.",true);return;}staffModal();return;}
+    if(target.dataset.entryAction){handleEntryAction(target.dataset.entryAction,target.dataset.id);return;}
+    if(target.dataset.projectToggle){if(!isAdmin())return;const p=project(target.dataset.projectToggle);if(!p)return;p.active=target.dataset.active==="true";save();renderAll();notify(p.active?"Projektet aktiverades.":"Projektet arkiverades.");return;}
+    if(target.dataset.staffToggle){if(!isAdmin())return;const u=person(target.dataset.staffToggle);if(!u)return;u.active=target.dataset.active==="true";save();renderAll();notify(u.active?"Medarbetaren aktiverades.":"Medarbetaren inaktiverades.");return;}
+    if(target.id==="roleButton"){roleModal();return;}
+    if(target.id==="exportBtn"){exportCSV();return;}
+    if(target.hasAttribute("data-close-modal")){closeModal();return;}
+  });
+  $("#modalRoot").addEventListener("click",e=>{if(e.target.matches("[data-close-backdrop]"))closeModal();});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("#modalRoot").innerHTML)closeModal();});
+  ["#entrySearch","#monthFilter","#statusFilter"].forEach(sel=>$(sel).addEventListener(sel==="#entrySearch"?"input":"change",renderEntries));
+  $("#entrySearch").addEventListener("input",()=>{if($("#entrySearch").value)go("entries");});
+  $("#statusFilter").addEventListener("change",()=>{if($("#statusFilter").value!=="all")go("entries");});
+  $("#monthFilter").addEventListener("change",()=>{if($("#monthFilter").value!=="all")go("entries");});
+  renderAll();
+})();
+</script>
+</body>
+</html>
